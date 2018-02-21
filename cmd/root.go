@@ -43,16 +43,8 @@ var cfgFile string
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "pipet",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
+	Short: "Store and sprinkle code snippets",
+	//	Long:  `FIXME: more betterrrr docs`,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -93,6 +85,8 @@ func initConfig() {
 		// Search config in home directory with name ".pipet" (without extension).
 		viper.AddConfigPath(home)
 		viper.SetConfigName(".pipet")
+
+		viper.SetDefault("document_dir", "~/snippets")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
