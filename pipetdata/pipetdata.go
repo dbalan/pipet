@@ -3,9 +3,14 @@
 package pipetdata
 
 import (
+	"bytes"
 	"fmt"
 	"github.com/pkg/errors"
 	"gopkg.in/yaml.v2"
+)
+
+var (
+	EBadData = fmt.Errorf("bad data")
 )
 
 // DataStore is the main structure for snippet access
@@ -45,8 +50,38 @@ func (s *Snippet) Marshal() ([]byte, error) {
 	return []byte(rendered), nil
 }
 
-// UnmarshalMD takes in note data with metadata blocks in yaml and populates
+func splitData(buf []byte) (front, data []byte, err error) {
+	guard := []byte("---")
+	lg := len(guard)
+
+	if !bytes.HasPrefix(buf, guard) {
+		err = EBadData
+		return
+	}
+
+	buf = buf[lg:]
+
+	end := bytes.Index(buf, guard)
+	if end == -1 {
+		err = EBadData
+		return
+	}
+
+	front = buf[0:end]
+	// skip --- + '\n'
+	data = buf[end+lg+1:]
+	return
+}
+
+// Unmarshal takes in note data with metadata blocks in yaml and populates
 // Snippet structure.
-func (s *Snippet) Unmarshal(data []byte) error {
-	return nil
+// https://jekyllrb.com/docs/frontmatter/
+func (s *Snippet) Unmarshal(buf []byte) error {
+	front, data, err := splitData(buf)
+
+	var meta metadata
+	yaml.Unmarshal(front, &meta)
+	s.Meta = meta
+	s.Data = string(data)
+	return err
 }
