@@ -7,9 +7,14 @@ import (
 	"fmt"
 	"github.com/pkg/errors"
 	"gopkg.in/yaml.v2"
+	"io/ioutil"
+	"os"
+	"path/filepath"
+	"strings"
 )
 
 var (
+	// EBadData error bad data on disk
 	EBadData = fmt.Errorf("bad data")
 )
 
@@ -84,4 +89,58 @@ func (s *Snippet) Unmarshal(buf []byte) error {
 	s.Meta = meta
 	s.Data = string(data)
 	return err
+}
+
+// NewDataStore creates a new datastore abastraction for storing notes. disk
+// path is passed as documentDir
+func NewDataStore(documentDir string) (*DataStore, error) {
+	fi, err := os.Stat(documentDir)
+	if err != nil {
+		//create directory
+		err = os.MkdirAll(documentDir, 0644)
+		if err != nil {
+			return nil, err
+		}
+	}
+	if !fi.IsDir() {
+		return nil, fmt.Errorf("path is not a directory: %s", documentDir)
+	}
+
+	return &DataStore{documentDir}, nil
+}
+
+func snippetStoreName(title string) string {
+	unusable := []string{" ", "/", "*", "%"}
+	for _, un := range unusable {
+		title = strings.Replace(title, un, "-", -1)
+	}
+	return fmt.Sprintf("%s.txt", title)
+}
+
+// Exist checks with a snippet with the name exists.
+func (d *DataStore) Exist(filename string) bool {
+	fullpath := filepath.Join(d.documentDir, filename)
+	_, err := os.Stat(fullpath)
+	return err == nil
+}
+
+// New creates a new entry in snippets
+func (d *DataStore) New(title string, tags ...string) (fn string, err error) {
+	ns := &Snippet{
+		Meta: metadata{title, tags},
+	}
+
+	snipname := snippetStoreName(title)
+	if d.Exist(snipname) {
+		return "", errors.New("duplicate snippet")
+	}
+
+	filename := filepath.Join(d.documentDir, snipname)
+	data, err := ns.Marshal()
+	if err != nil {
+		return "", errors.Wrap(err, "marshalling failed")
+	}
+
+	err = ioutil.WriteFile(filename, data, 0755)
+	return filename, err
 }
