@@ -97,12 +97,11 @@ func NewDataStore(documentDir string) (*DataStore, error) {
 	fi, err := os.Stat(documentDir)
 	if err != nil {
 		//create directory
-		err = os.MkdirAll(documentDir, 0644)
+		err = os.MkdirAll(documentDir, 0755)
 		if err != nil {
 			return nil, err
 		}
-	}
-	if !fi.IsDir() {
+	} else if !fi.IsDir() {
 		return nil, fmt.Errorf("path is not a directory: %s", documentDir)
 	}
 
