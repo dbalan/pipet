@@ -123,6 +123,10 @@ func (d *DataStore) Exist(filename string) bool {
 	return err == nil
 }
 
+func (d *DataStore) filename(id string) string {
+	return filepath.Join(d.documentDir, id)
+}
+
 // New creates a new entry in snippets
 func (d *DataStore) New(title string, tags ...string) (fn string, err error) {
 	ns := &Snippet{
@@ -134,7 +138,7 @@ func (d *DataStore) New(title string, tags ...string) (fn string, err error) {
 		return "", errors.New("duplicate snippet")
 	}
 
-	filename := filepath.Join(d.documentDir, snipname)
+	filename := d.filename(snipname)
 	data, err := ns.Marshal()
 	if err != nil {
 		return "", errors.Wrap(err, "marshalling failed")
@@ -142,4 +146,45 @@ func (d *DataStore) New(title string, tags ...string) (fn string, err error) {
 
 	err = ioutil.WriteFile(filename, data, 0755)
 	return filename, err
+}
+
+// Read reads and parses a snippet document
+func (d *DataStore) Read(id string) (sn *Snippet, err error) {
+	if !d.Exist(id) {
+		err = errors.New("no such document")
+		return
+	}
+
+	filename := d.filename(id)
+
+	buf, err := ioutil.ReadFile(filename)
+	if err != nil {
+		err = errors.Wrap(err, "reading failed")
+		return
+	}
+
+	s := &Snippet{}
+	err = s.Unmarshal(buf)
+	return s, err
+}
+
+func (d *DataStore) List() (sns []*Snippet, err error) {
+	sns = []*Snippet{}
+
+	fli, err := ioutil.ReadDir(d.documentDir)
+	if err != nil {
+		return
+	}
+
+	for _, f := range fli {
+		if !f.IsDir() && strings.HasSuffix(f.Name(), ".txt") {
+			s, e := d.Read(f.Name())
+			if e != nil {
+				err = e
+				return
+			}
+			sns = append(sns, s)
+		}
+	}
+	return
 }

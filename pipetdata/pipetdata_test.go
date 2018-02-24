@@ -56,7 +56,7 @@ func TestSnippetFile(t *testing.T) {
 	}
 }
 
-func TestDataStoreNew(t *testing.T) {
+func TestDataStore(t *testing.T) {
 	tmpdir, err := ioutil.TempDir("", "testpipet")
 	assert.Nil(t, err, "tmp directory")
 
@@ -72,4 +72,45 @@ func TestDataStoreNew(t *testing.T) {
 	assert.Len(t, fi, 1, "should be just one file")
 	ours := fi[0]
 	assert.Equal(t, fn, filepath.Join(tmpdir, ours.Name()), "filename should match")
+
+	// try to read back!
+	sn, err := ds.Read(ours.Name())
+	assert.Nil(t, err, "should be a valid snippet")
+
+	expected := &Snippet{
+		Meta: metadata{"Kernel version", []string{"linux", "kernel", "systems", "code"}},
+	}
+
+	assert.Equal(t, expected.Meta, sn.Meta, "snippet metadata should match")
+}
+
+func TestDataStoreList(t *testing.T) {
+	tmpdir, err := ioutil.TempDir("", "testpipet")
+	assert.Nil(t, err, "tmp directory")
+
+	ds, err := NewDataStore(tmpdir)
+	assert.Nil(t, err, "data store creation")
+
+	snli, err := ds.List()
+	assert.Nil(t, err, "should not error on empty ds")
+	assert.Len(t, snli, 0, "empty ds")
+
+	_, err = ds.New("Kernel version", "linux", "kernel", "systems", "code")
+	assert.Nil(t, err, "new snippet must be created")
+
+	expected := &Snippet{
+		Meta: metadata{"Kernel version", []string{"linux", "kernel", "systems", "code"}},
+	}
+
+	snli, err = ds.List()
+	assert.Nil(t, err, "should not error")
+	assert.Len(t, snli, 1, "empty ds")
+	assert.Equal(t, expected.Meta, snli[0].Meta, "metadata must match")
+
+	_, err = ds.New("Kernel version2", "linux", "kernel", "systems", "code")
+	assert.Nil(t, err, "new snippet must be created")
+
+	snli, err = ds.List()
+	assert.Nil(t, err, "should not error")
+	assert.Len(t, snli, 2, "empty ds")
 }
