@@ -50,7 +50,7 @@ var newCmd = &cobra.Command{
 		diskPath := viper.Get("document_dir").(string)
 
 		if title == "" {
-			title = uuid.NewV4().String()
+			title = uuid.Must(uuid.NewV4()).String()
 		}
 
 		if len(snippetTags) == 0 {
