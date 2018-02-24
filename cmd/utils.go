@@ -32,7 +32,9 @@ package cmd
 import (
 	"fmt"
 	homedir "github.com/mitchellh/go-homedir"
+	"github.com/pkg/errors"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 )
@@ -55,4 +57,27 @@ func expandHome(p string) string {
 	}
 
 	return filepath.Join(h, p[2:])
+}
+
+// call external editor to edit the snippet.
+func editSnippet(fn string) error {
+	editorBin := os.Getenv("EDITOR")
+	if editorBin == "" {
+		return errors.New("please populate default EDITOR value by setting $EDITOR")
+	}
+
+	cmd := exec.Command(editorBin, fn)
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	err := cmd.Start()
+	if err != nil {
+		return errors.Wrap(err, "launching editer failed")
+	}
+	err = cmd.Wait()
+	if err != nil {
+		return errors.Wrap(err, "editing failed")
+	}
+	return nil
 }
