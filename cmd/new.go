@@ -31,7 +31,6 @@ package cmd
 import (
 	"fmt"
 	"github.com/dbalan/pipet/pipetdata"
-	"github.com/satori/go.uuid"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -47,10 +46,6 @@ var newCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		title := cmd.Flag("title").Value.String()
 		diskPath := viper.Get("document_dir").(string)
-
-		if title == "" {
-			title = uuid.Must(uuid.NewV4()).String()
-		}
 
 		dataStore, err := pipetdata.NewDataStore(expandHome(diskPath))
 		errorGuard(err, "error accessing data store")
@@ -72,6 +67,6 @@ func init() {
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	newCmd.PersistentFlags().String("title", "", "title for the snippet, if unset a random uuid is used.")
+	newCmd.PersistentFlags().String("title", "untitled", "title for the snippet, if unset a random uuid is used.")
 	snippetTags = newCmd.PersistentFlags().StringArray("tags", []string{"untagged"}, "tags for snippet, if unset, a single tag `untagged` is set.")
 }

@@ -8,6 +8,7 @@ import (
 )
 
 var exampleSnippet = []byte(`---
+uid: 1af02551-5821-4a54-be81-1a07441101f8
 title: Kernel version
 tags:
 - linux
@@ -26,13 +27,15 @@ func TestMarshal(t *testing.T) {
 	assert.Equal(t, "Kernel version", snip.Meta.Title, "title should match")
 	assert.Equal(t, []string{"linux", "kernel", "systems", "code"},
 		snip.Meta.Tags, "tags should match")
+	assert.Equal(t, "1af02551-5821-4a54-be81-1a07441101f8", snip.Meta.UID, "uid should match")
 
 	assert.Equal(t, "uname -a\n", snip.Data, "data should match")
 }
 
 func TestUnmarshal(t *testing.T) {
 	snip := &Snippet{
-		Meta: metadata{"Kernel version", []string{"linux", "kernel", "systems", "code"}},
+		Meta: metadata{UID: "1af02551-5821-4a54-be81-1a07441101f8",
+			Title: "Kernel version", Tags: []string{"linux", "kernel", "systems", "code"}},
 		Data: "uname -a",
 	}
 
@@ -40,20 +43,6 @@ func TestUnmarshal(t *testing.T) {
 
 	assert.Nil(t, err, "error should not have happened")
 	assert.Equal(t, exampleSnippet, data, "render data should match")
-}
-
-func TestSnippetFile(t *testing.T) {
-	cases := []struct {
-		Title string
-		Fname string
-	}{
-		{"hello world", "hello-world.txt"},
-		{"hello*world%inlive/what", "hello-world-inlive-what.txt"},
-	}
-
-	for _, c := range cases {
-		assert.Equal(t, c.Fname, snippetStoreName(c.Title), "should match!")
-	}
 }
 
 func TestDataStore(t *testing.T) {
@@ -71,14 +60,15 @@ func TestDataStore(t *testing.T) {
 
 	assert.Len(t, fi, 1, "should be just one file")
 	ours := fi[0]
-	assert.Equal(t, fn, filepath.Join(tmpdir, ours.Name()), "filename should match")
+	uid := ours.Name()
 
+	assert.Equal(t, fn, filepath.Join(tmpdir, uid), "filepaths should match")
 	// try to read back!
 	sn, err := ds.Read(ours.Name())
 	assert.Nil(t, err, "should be a valid snippet")
 
 	expected := &Snippet{
-		Meta: metadata{"Kernel version", []string{"linux", "kernel", "systems", "code"}},
+		Meta: metadata{UID: uid, Title: "Kernel version", Tags: []string{"linux", "kernel", "systems", "code"}},
 	}
 
 	assert.Equal(t, expected.Meta, sn.Meta, "snippet metadata should match")
@@ -95,16 +85,20 @@ func TestDataStoreList(t *testing.T) {
 	assert.Nil(t, err, "should not error on empty ds")
 	assert.Len(t, snli, 0, "empty ds")
 
-	_, err = ds.New("Kernel version", "linux", "kernel", "systems", "code")
+	fn, err := ds.New("Kernel version", "linux", "kernel", "systems", "code")
 	assert.Nil(t, err, "new snippet must be created")
 
-	expected := &Snippet{
-		Meta: metadata{"Kernel version", []string{"linux", "kernel", "systems", "code"}},
-	}
+	uid := filepath.Base(fn)
+	// create 1
 
 	snli, err = ds.List()
 	assert.Nil(t, err, "should not error")
 	assert.Len(t, snli, 1, "empty ds")
+
+	expected := &Snippet{
+		Meta: metadata{UID: uid, Title: "Kernel version", Tags: []string{"linux", "kernel", "systems", "code"}},
+	}
+
 	assert.Equal(t, expected.Meta, snli[0].Meta, "metadata must match")
 
 	_, err = ds.New("Kernel version2", "linux", "kernel", "systems", "code")

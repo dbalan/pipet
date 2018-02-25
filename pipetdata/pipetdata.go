@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/pkg/errors"
+	"github.com/satori/go.uuid"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
@@ -25,6 +26,7 @@ type DataStore struct {
 
 // Metadata for snippet
 type metadata struct {
+	UID   string   // only relevant to data store, pointer to file where snippet is stored.
 	Title string   `yaml:"title"`
 	Tags  []string `yaml:"tags,omitempty"`
 }
@@ -108,14 +110,6 @@ func NewDataStore(documentDir string) (*DataStore, error) {
 	return &DataStore{documentDir}, nil
 }
 
-func snippetStoreName(title string) string {
-	unusable := []string{" ", "/", "*", "%"}
-	for _, un := range unusable {
-		title = strings.Replace(title, un, "-", -1)
-	}
-	return fmt.Sprintf("%s.txt", title)
-}
-
 // Exist checks with a snippet with the name exists.
 func (d *DataStore) Exist(filename string) bool {
 	fullpath := filepath.Join(d.documentDir, filename)
@@ -123,27 +117,29 @@ func (d *DataStore) Exist(filename string) bool {
 	return err == nil
 }
 
-func (d *DataStore) filename(id string) string {
+func (d *DataStore) fullpath(id string) string {
 	return filepath.Join(d.documentDir, id)
 }
 
 // New creates a new entry in snippets
 func (d *DataStore) New(title string, tags ...string) (fn string, err error) {
+	id := uuid.Must(uuid.NewV4()).String()
+	uid := fmt.Sprintf("%s.txt", id)
+
 	ns := &Snippet{
-		Meta: metadata{title, tags},
+		Meta: metadata{uid, title, tags},
 	}
 
-	snipname := snippetStoreName(title)
-	if d.Exist(snipname) {
+	if d.Exist(uid) {
 		return "", errors.New("duplicate snippet")
 	}
 
-	filename := d.filename(snipname)
 	data, err := ns.Marshal()
 	if err != nil {
 		return "", errors.Wrap(err, "marshalling failed")
 	}
 
+	filename := d.fullpath(uid)
 	err = ioutil.WriteFile(filename, data, 0755)
 	return filename, err
 }
@@ -155,7 +151,7 @@ func (d *DataStore) Read(id string) (sn *Snippet, err error) {
 		return
 	}
 
-	filename := d.filename(id)
+	filename := d.fullpath(id)
 
 	buf, err := ioutil.ReadFile(filename)
 	if err != nil {
