@@ -117,7 +117,7 @@ func (d *DataStore) Exist(filename string) bool {
 	return err == nil
 }
 
-func (d *DataStore) fullpath(id string) string {
+func (d *DataStore) Fullpath(id string) string {
 	return filepath.Join(d.documentDir, id)
 }
 
@@ -139,7 +139,7 @@ func (d *DataStore) New(title string, tags ...string) (fn string, err error) {
 		return "", errors.Wrap(err, "marshalling failed")
 	}
 
-	filename := d.fullpath(uid)
+	filename := d.Fullpath(uid)
 	err = ioutil.WriteFile(filename, data, 0755)
 	return filename, err
 }
@@ -151,7 +151,7 @@ func (d *DataStore) Read(id string) (sn *Snippet, err error) {
 		return
 	}
 
-	filename := d.fullpath(id)
+	filename := d.Fullpath(id)
 
 	buf, err := ioutil.ReadFile(filename)
 	if err != nil {
