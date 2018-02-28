@@ -31,12 +31,10 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/dbalan/pipet/pipetdata"
 
 	"github.com/fatih/color"
 	"github.com/ryanuber/columnize"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 var (
@@ -50,9 +48,8 @@ var listCmd = &cobra.Command{
 	Short: "list all snippets",
 	Long:  `Lists all snippets, by default it only prints the uid and title`,
 	Run: func(cmd *cobra.Command, args []string) {
-		diskPath := viper.Get("document_dir").(string)
-		dataStore, err := pipetdata.NewDataStore(expandHome(diskPath))
-		errorGuard(err, "error accessing data store")
+
+		dataStore := getDataStore()
 
 		sns, err := dataStore.List()
 		errorGuard(err, "listing store failed")

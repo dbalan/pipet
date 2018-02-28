@@ -30,10 +30,7 @@
 package cmd
 
 import (
-	"github.com/dbalan/pipet/pipetdata"
-
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // editCmd represents the edit command
@@ -42,10 +39,7 @@ var editCmd = &cobra.Command{
 	Short: "edit snippet data",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		diskPath := viper.Get("document_dir").(string)
-		dataStore, err := pipetdata.NewDataStore(expandHome(diskPath))
-		errorGuard(err, "error accessing data store")
-
+		dataStore := getDataStore()
 		fn := dataStore.Fullpath(args[0])
 		editSnippet(fn)
 	},

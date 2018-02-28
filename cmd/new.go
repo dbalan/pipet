@@ -30,9 +30,8 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/dbalan/pipet/pipetdata"
+
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 var (
@@ -45,10 +44,8 @@ var newCmd = &cobra.Command{
 	Short: `Creates a new snippet and opens $EDITOR to edit content`,
 	Run: func(cmd *cobra.Command, args []string) {
 		title := cmd.Flag("title").Value.String()
-		diskPath := viper.Get("document_dir").(string)
 
-		dataStore, err := pipetdata.NewDataStore(expandHome(diskPath))
-		errorGuard(err, "error accessing data store")
+		dataStore := getDataStore()
 
 		fn, err := dataStore.New(title, *snippetTags...)
 		errorGuard(err, "creating snippet failed")

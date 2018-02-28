@@ -32,10 +32,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/dbalan/pipet/pipetdata"
-
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // echoCmd represents the echo command
@@ -43,10 +40,7 @@ var echoCmd = &cobra.Command{
 	Use:   "echo uid",
 	Short: "echo snippet data to stdout",
 	Run: func(cmd *cobra.Command, args []string) {
-		diskPath := viper.Get("document_dir").(string)
-		dataStore, err := pipetdata.NewDataStore(expandHome(diskPath))
-		errorGuard(err, "error accessing data store")
-
+		dataStore := getDataStore()
 		snip, err := dataStore.Read(args[0])
 		errorGuard(err, "reading snippet failed")
 		fmt.Print(snip.Data)

@@ -31,12 +31,16 @@ package cmd
 
 import (
 	"fmt"
-	homedir "github.com/mitchellh/go-homedir"
-	"github.com/pkg/errors"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
+
+	"github.com/dbalan/pipet/pipetdata"
+
+	homedir "github.com/mitchellh/go-homedir"
+	"github.com/pkg/errors"
+	"github.com/spf13/viper"
 )
 
 func errorGuard(err error, msg string) {
@@ -57,6 +61,13 @@ func expandHome(p string) string {
 	}
 
 	return filepath.Join(h, p[2:])
+}
+
+func getDataStore() *pipetdata.DataStore {
+	diskPath := viper.Get("document_dir").(string)
+	dataStore, err := pipetdata.NewDataStore(expandHome(diskPath))
+	errorGuard(err, "error accessing data store")
+	return dataStore
 }
 
 // call external editor to edit the snippet.

@@ -31,11 +31,11 @@ package cmd
 
 import (
 	"fmt"
+
 	"github.com/dbalan/pipet/pipetdata"
 
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // showCmd represents the show command
@@ -44,10 +44,7 @@ var showCmd = &cobra.Command{
 	Short: "display the snippet",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		diskPath := viper.Get("document_dir").(string)
-		dataStore, err := pipetdata.NewDataStore(expandHome(diskPath))
-		errorGuard(err, "error accessing data store")
-
+		dataStore := getDataStore()
 		snip, err := dataStore.Read(args[0])
 		errorGuard(err, "reading snippet failed")
 		fmt.Printf(fancySnippet(snip))
