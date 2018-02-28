@@ -33,6 +33,7 @@ import (
 	"fmt"
 	"github.com/dbalan/pipet/pipetdata"
 
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -49,14 +50,24 @@ var showCmd = &cobra.Command{
 
 		snip, err := dataStore.Read(args[0])
 		errorGuard(err, "reading snippet failed")
-
-		fmt.Println(snip.Meta.Title)
-		fmt.Println(snip.Meta.Tags)
-		fmt.Println("---")
-		fmt.Println(snip.Data)
+		fmt.Printf(fancySnippet(snip))
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(showCmd)
+}
+
+func fancySnippet(s *pipetdata.Snippet) string {
+	green := color.New(color.FgGreen).SprintFunc()
+	blue := color.New(color.FgBlue).SprintFunc()
+	sep := green("---\n")
+
+	text := sep + green("Title: ") + fmt.Sprint(s.Meta.Title) + green("\nTags:\n")
+	for _, t := range s.Meta.Tags {
+		text += green("- ") + blue(t) + "\n"
+	}
+	text += sep
+	text += s.Data
+	return text
 }
