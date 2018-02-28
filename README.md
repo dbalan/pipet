@@ -13,4 +13,5 @@ Pipet looks for config file `.pipet.yaml` in the home directory. Pipet stores sn
   - pipet search : TBD
   - pipet edit id : edit a snippet by id
   - pipet show id : show a snippet
+  - pipet echo id : like show, but only prints the snippet data.
   - pipet list : list all snippets

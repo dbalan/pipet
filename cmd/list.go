@@ -33,6 +33,8 @@ import (
 	"fmt"
 	"github.com/dbalan/pipet/pipetdata"
 
+	"github.com/fatih/color"
+	"github.com/ryanuber/columnize"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -55,19 +57,31 @@ var listCmd = &cobra.Command{
 		sns, err := dataStore.List()
 		errorGuard(err, "listing store failed")
 
+		blue := color.New(color.FgBlue).SprintFunc()
+		green := color.New(color.FgGreen).SprintFunc()
+
+		output := []string{"UID | Title | Tags"}
 		for _, snip := range sns {
-			tagList := ""
+			tags := ""
 			for _, t := range snip.Meta.Tags {
-				tagList += t + " "
+				if tags != "" {
+					tags += ","
+				}
+				tags += blue(t)
 			}
-			fmt.Printf("%s\t%s\t[%s]\n", snip.Meta.UID, snip.Meta.Title, tagList)
+
+			out := fmt.Sprintf("%s | %s | %s", green(snip.Meta.UID), snip.Meta.Title, tags)
+			output = append(output, out)
 		}
+
+		rendered := columnize.SimpleFormat(output)
+		fmt.Println(rendered)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(listCmd)
 
-	listCmd.Flags().BoolVarP(&tags, "tags", "t", false, "Enable list tags associated with the snippet.")
-	listCmd.Flags().BoolVarP(&full, "full", "f", false, "Print the full snippet")
+	//	listCmd.Flags().BoolVarP(&tags, "tags", "t", false, "Enable list tags associated with the snippet.")
+	//	listCmd.Flags().BoolVarP(&full, "full", "f", false, "Print the full snippet")
 }
