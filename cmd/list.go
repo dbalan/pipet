@@ -35,10 +35,10 @@ import (
 	"github.com/fatih/color"
 	"github.com/ryanuber/columnize"
 	"github.com/spf13/cobra"
+	"strings"
 )
 
 var (
-	tags = false
 	full = false
 )
 
@@ -59,15 +59,9 @@ var listCmd = &cobra.Command{
 
 		output := []string{"UID | Title | Tags"}
 		for _, snip := range sns {
-			tags := ""
-			for _, t := range snip.Meta.Tags {
-				if tags != "" {
-					tags += ","
-				}
-				tags += blue(t)
-			}
-
-			out := fmt.Sprintf("%s | %s | %s", green(snip.Meta.UID), snip.Meta.Title, tags)
+			tags := strings.Join(snip.Meta.Tags, " ")
+			out := fmt.Sprintf("%s | %s | %s", green(snip.Meta.UID),
+				snip.Meta.Title, blue(tags))
 			output = append(output, out)
 		}
 
