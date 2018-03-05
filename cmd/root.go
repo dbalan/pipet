@@ -89,7 +89,6 @@ func initConfig() {
 	}
 
 	viper.SetDefault("document_dir", "~/snippets")
-	viper.SetDefault("fzf", "/usr/bin/fzf")
 
 	viper.AutomaticEnv() // read in environment variables that match
 
@@ -98,8 +97,7 @@ func initConfig() {
 		// fmt.Fprintf(os.Stderr, "Using config file: %s", viper.ConfigFileUsed())
 	}
 
-	// check for binary deps
-	fzf := viper.Get("fzf").(string)
-	_, err := os.Stat(fzf)
-	errorGuard(err, "fzf was not found in path set: maybe you need to run pipet configure?")
+	// try gussing fzf command
+	_, err := which("fzf")
+	errorGuard(err, "fzf was not found in path")
 }

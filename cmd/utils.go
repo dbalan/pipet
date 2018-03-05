@@ -30,18 +30,18 @@
 package cmd
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
 
-	"github.com/dbalan/pipet/pipetdata"
-
-	"bytes"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
+
+	"github.com/dbalan/pipet/pipetdata"
 )
 
 func errorGuard(err error, msg string) {
@@ -103,22 +103,42 @@ func parseOutput(out string) (string, error) {
 	return oli[0], nil
 }
 
+func which(c string) (string, error) {
+	var w bytes.Buffer
+
+	cmd := exec.Command("which", c)
+	cmd.Stdout = &w
+
+	err := cmd.Start()
+	if err != nil {
+		return "", err
+	}
+	err = cmd.Wait()
+	if err != nil {
+		return "", err
+	}
+	return strings.TrimSuffix(w.String(), "\n"), nil
+}
+
 // basic bare bones wrapper that calls fzf
 // calls fzf on searchText and returns the selected line
 func fuzzyWrapper(searchText string) (sid string, e error) {
-	// checks in initconfig ensures that this doesn't panic. Its not great,
-	// but its fine.
-	fzy := viper.Get("fzf").(string)
+
+	fzf, err := which("fzf")
+	if err != nil {
+		e = err
+		return
+	}
 
 	var w bytes.Buffer
 
-	cmd := exec.Command(fzy)
+	cmd := exec.Command(fzf)
 
 	cmd.Stdin = strings.NewReader(searchText)
 	cmd.Stdout = &w
 	cmd.Stderr = os.Stderr
 
-	err := cmd.Start()
+	err = cmd.Start()
 	if err != nil {
 		e = errors.Wrap(err, "launching editer failed")
 		return

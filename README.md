@@ -1,6 +1,7 @@
 # Pipet: snippet manager
 
-Pipet is a set of commands to store and retrieve snippets of text.
+Pipet is a set of commands to store and retrieve snippets of text. Depends on
+[fzf](https://github.com/junegunn/fzf) for search
 
 ## Installation
 There are multiple ways to get pipet.
@@ -22,7 +23,6 @@ Pipet looks for config file `.pipet.yaml` in the home directory.
 ### Sample config
 ```yaml
 document_dir: "<directory-where-files-are-stored>" # default is ~/snippets
-fzf: "<path-to-fzf-binary>" # default is /usr/bin/fzf
 ```
 
 ## Usage
@@ -32,7 +32,7 @@ fzf: "<path-to-fzf-binary>" # default is /usr/bin/fzf
   - pipet show id : show a snippet
   - pipet echo id : like show, but only prints the snippet data.
   - pipet list : list all snippets
-  - pipet configure: initial config
+  - pipet configure: TBD
 
 ## TODO
   - [ ] finish configure command
@@ -47,5 +47,5 @@ fzf: "<path-to-fzf-binary>" # default is /usr/bin/fzf
    before opening a PR.
 
 ## Thanks
-Pipet takes a heavy inspiration from pet and other projects.
+Pipet takes a heavy inspiration from [pet](https://github.com/knqyf263/pet) and other projects.
 
