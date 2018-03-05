@@ -38,6 +38,7 @@ import (
 
 	"github.com/dbalan/pipet/pipetdata"
 
+	"bytes"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
@@ -91,4 +92,42 @@ func editSnippet(fn string) error {
 		return errors.Wrap(err, "editing failed")
 	}
 	return nil
+}
+
+func parseOutput(out string) (string, error) {
+	out = strings.TrimSuffix(out, "\n")
+	oli := strings.Split(out, " ")
+	if len(oli) < 2 {
+		return "", errors.New("bad data")
+	}
+	return oli[0], nil
+}
+
+// basic bare bones wrapper that calls fzf
+// calls fzf on searchText and returns the selected line
+func fuzzyWrapper(searchText string) (sid string, e error) {
+	// checks in initconfig ensures that this doesn't panic. Its not great,
+	// but its fine.
+	fzy := viper.Get("fzf").(string)
+
+	var w bytes.Buffer
+
+	cmd := exec.Command(fzy)
+
+	cmd.Stdin = strings.NewReader(searchText)
+	cmd.Stdout = &w
+	cmd.Stderr = os.Stderr
+
+	err := cmd.Start()
+	if err != nil {
+		e = errors.Wrap(err, "launching editer failed")
+		return
+	}
+
+	err = cmd.Wait()
+	if err != nil {
+		e = errors.Wrap(err, "editing failed")
+		return
+	}
+	return parseOutput(w.String())
 }
