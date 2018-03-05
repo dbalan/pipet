@@ -32,8 +32,10 @@ fzf: "<path-to-fzf-binary>" # default is /usr/bin/fzf
   - pipet show id : show a snippet
   - pipet echo id : like show, but only prints the snippet data.
   - pipet list : list all snippets
+  - pipet configure: initial config
 
 ## TODO
+  - [ ] finish configure command
   - [ ] Search full text, with a flag to search command
   - [ ] Try to abstract snippet id from operations.
   - [ ] Tests, would like more tests.

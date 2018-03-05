@@ -101,5 +101,5 @@ func initConfig() {
 	// check for binary deps
 	fzf := viper.Get("fzf").(string)
 	_, err := os.Stat(fzf)
-	errorGuard(err, "fzf was not found in path set: "+fzf)
+	errorGuard(err, "fzf was not found in path set: maybe you need to run pipet configure?")
 }
