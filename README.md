@@ -36,11 +36,15 @@ document_dir: "<directory-where-files-are-stored>" # default is ~/snippets
 
 ## TODO
   - [ ] finish configure command
+  - [ ] hacking docs
+  - [ ] circleci build
+  - [ ] make public
   - [ ] Search full text, with a flag to search command
   - [ ] Try to abstract snippet id from operations.
   - [ ] Tests, would like more tests.
 
-## Changes
+## Hacking
+0. Uses [dep]() for dependency management. TBD
 1. Pipet is mostly written to suit my workflow, which means it is quite limited.
    I would be happy to accept pull requests to improve and change workflows, but
    please open an Issue explaining what and why you want to change something
