@@ -54,12 +54,26 @@ jobs:
 
 workflows:
   version: 2
-  build-and-deploy:
+  testbuild:
     jobs:
-      - build
+      - build:
+          filters:
+            tags:
+              ignore: /^v.*/
+  release-build:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
       - deploy:
           requires:
             - build
           filters:
+            branches:
+              ignore: /.*/
             tags:
               only: /^v.*/
+
