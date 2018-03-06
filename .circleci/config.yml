@@ -1,0 +1,18 @@
+# Golang CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-go/ for more details
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/golang:1.10
+
+    working_directory: /go/src/github.com/dbalan/pipet
+    steps:
+      - checkout
+      - run: curl -L https://github.com/golang/dep/releases/download/v0.4.1/dep-linux-amd64 > dep
+      - run: chmod a+x dep
+      # specify any bash command here prefixed with `run: `
+      - run: ./dep ensure -v
+      - run: go test -v ./...
+      - run: go build
