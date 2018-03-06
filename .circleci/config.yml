@@ -24,3 +24,6 @@ jobs:
 
       - run: go test -v ./...
       - run: go build
+      - store_artifacts:
+          path: pipet
+          destination: pipet-amd64
