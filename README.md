@@ -28,6 +28,9 @@ document_dir: "<directory-where-files-are-stored>" # default is ~/snippets
 ```
 
 ## Usage
+
+[![asciicast](https://asciinema.org/a/W6tv7bN9z76EAlZJZDS025JwU.png)](https://asciinema.org/a/W6tv7bN9z76EAlZJZDS025JwU)
+
   - pipet new : create a new snippets
   - pipet search : search through current snippets (only titles and tags for now)
   - pipet edit id : edit a snippet by id
