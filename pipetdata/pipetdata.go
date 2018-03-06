@@ -123,7 +123,7 @@ func (d *DataStore) Fullpath(id string) string {
 
 // New creates a new entry in snippets
 func (d *DataStore) New(title string, tags ...string) (fn string, err error) {
-	id := uuid.Must(uuid.NewV4()).String()
+	id := uuid.NewV4().String()
 	uid := fmt.Sprintf("%s.txt", id)
 
 	ns := &Snippet{
