@@ -39,8 +39,9 @@ document_dir: "<directory-where-files-are-stored>" # default is ~/snippets
 ## TODO
   - [ ] finish configure command
   - [x] hacking docs
-  - [ ] circleci build
-  - [ ] make public
+  - [x] circleci build
+  - [ ] binary downloads
+  - [x] make public
   - [ ] Search full text, with a flag to search command
   - [ ] Try to abstract snippet id from operations.
   - [ ] Tests, would like more tests.
