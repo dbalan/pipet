@@ -16,7 +16,7 @@ go install # installs to $GOPATH/bin
 ```
 
 2. As a binary release
-TBD
+see: https://github.com/dbalan/pipet/releases
 
 
 ## Configuration
@@ -28,6 +28,9 @@ document_dir: "<directory-where-files-are-stored>" # default is ~/snippets
 ```
 
 ## Usage
+
+[![asciicast](https://asciinema.org/a/W6tv7bN9z76EAlZJZDS025JwU.png)](https://asciinema.org/a/W6tv7bN9z76EAlZJZDS025JwU)
+
   - pipet new : create a new snippets
   - pipet search : search through current snippets (only titles and tags for now)
   - pipet edit id : edit a snippet by id
@@ -37,10 +40,10 @@ document_dir: "<directory-where-files-are-stored>" # default is ~/snippets
   - pipet configure: TBD
 
 ## TODO
-  - [ ] finish configure command
+  - [x] finish configure command
   - [x] hacking docs
   - [x] circleci build
-  - [ ] binary downloads
+  - [x] binary downloads
   - [x] make public
   - [ ] Search full text, with a flag to search command
   - [ ] Try to abstract snippet id from operations.

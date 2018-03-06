@@ -42,11 +42,13 @@ import (
 	"github.com/spf13/viper"
 
 	"github.com/dbalan/pipet/pipetdata"
+	"github.com/fatih/color"
 )
 
 func errorGuard(err error, msg string) {
+	red := color.New(color.FgRed).SprintFunc()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s: %v\n", msg, err)
+		fmt.Fprintf(os.Stderr, "%s: %v\n", red(msg), err)
 		os.Exit(-1)
 	}
 }
@@ -62,6 +64,20 @@ func expandHome(p string) string {
 	}
 
 	return filepath.Join(h, p[2:])
+}
+
+func isValidDirectory(p string) bool {
+	if strings.Contains(p, " ") {
+		return false
+	}
+
+	fullPath := expandHome(p)
+	fi, err := os.Stat(fullPath)
+	if err == nil && !fi.IsDir() {
+		return false // present and is a file
+	}
+
+	return true
 }
 
 func getDataStore() *pipetdata.DataStore {
