@@ -28,3 +28,38 @@ jobs:
       - store_artifacts:
           path: dist
           dest: dist
+  deploy:
+    docker:
+      - image: circleci/golang:1.10
+
+    working_directory: /go/src/github.com/dbalan/pipet
+    steps:
+      - checkout
+      - run: curl -L https://github.com/golang/dep/releases/download/v0.4.1/dep-linux-amd64 > dep
+      - run: chmod a+x dep
+      - restore_cache:
+          keys:
+            - deps-vendor
+      # specify any bash command here prefixed with `run: `
+      - run: ./dep ensure -v
+      - run: go get github.com/mitchellh/gox github.com/tcnksm/ghr
+      - save_cache:
+          key: deps-vendor
+          paths:
+            - "vendor"
+      - run: gox -output "dist/pipet_{{.OS}}_{{.Arch}}" -os "freebsd linux netbsd darwin" -arch "amd64 386 arm" -osarch "!darwin/arm"
+      - run: ghr -t $GITHUB_TOKEN -u $CIRCLE_PROJECT_USERNAME -r $CIRCLE_PROJECT_REPONAME --replace $(git describe --tags) dist/
+
+
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
