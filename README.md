@@ -16,7 +16,7 @@ go install # installs to $GOPATH/bin
 ```
 
 2. As a binary release
-TBD
+see: https://github.com/dbalan/pipet/releases
 
 
 ## Configuration
@@ -40,10 +40,10 @@ document_dir: "<directory-where-files-are-stored>" # default is ~/snippets
   - pipet configure: TBD
 
 ## TODO
-  - [ ] finish configure command
+  - [x] finish configure command
   - [x] hacking docs
   - [x] circleci build
-  - [ ] binary downloads
+  - [x] binary downloads
   - [x] make public
   - [ ] Search full text, with a flag to search command
   - [ ] Try to abstract snippet id from operations.
