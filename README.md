@@ -1,5 +1,7 @@
 # Pipet: snippet manager
 
+[![CircleCI](https://circleci.com/gh/dbalan/pipet/tree/master.svg?style=svg)](https://circleci.com/gh/dbalan/pipet/tree/master)
+
 Pipet is a set of commands to store and retrieve snippets of text. Depends on
 [fzf](https://github.com/junegunn/fzf) for search.
 
