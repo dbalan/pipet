@@ -17,13 +17,14 @@ jobs:
             - deps-vendor
       # specify any bash command here prefixed with `run: `
       - run: ./dep ensure -v
+      - run: go get github.com/mitchellh/gox
       - save_cache:
           key: deps-vendor
           paths:
             - "vendor"
 
       - run: go test -v ./...
-      - run: go build
+      - run: gox -output "dist/pipet_{{.OS}}_{{.Arch}}" -os "freebsd linux netbsd darwin" -arch "amd64 386 arm" -osarch "!darwin/arm"
       - store_artifacts:
-          path: pipet
-          destination: pipet-amd64
+          path: dist
+          dest: dist
