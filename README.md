@@ -1,7 +1,7 @@
 # Pipet: snippet manager
 
 Pipet is a set of commands to store and retrieve snippets of text. Depends on
-[fzf](https://github.com/junegunn/fzf) for search
+[fzf](https://github.com/junegunn/fzf) for search.
 
 ## Installation
 There are multiple ways to get pipet.
@@ -36,7 +36,7 @@ document_dir: "<directory-where-files-are-stored>" # default is ~/snippets
 
 ## TODO
   - [ ] finish configure command
-  - [ ] hacking docs
+  - [x] hacking docs
   - [ ] circleci build
   - [ ] make public
   - [ ] Search full text, with a flag to search command
@@ -44,7 +44,15 @@ document_dir: "<directory-where-files-are-stored>" # default is ~/snippets
   - [ ] Tests, would like more tests.
 
 ## Hacking
-0. Uses [dep]() for dependency management. TBD
+0. Uses [dep](https://golang.github.io/dep/) for dependency management.
+```bash
+# Clone repo
+WORKDIR=$GOPATH/src/github.com/dbalan/pipet
+git clone git@github.com:dbalan/pipet $OWORKDIR
+cd $WORKDIR
+dep ensure  # dep needes to be installed ofcourse
+go build
+```
 1. Pipet is mostly written to suit my workflow, which means it is quite limited.
    I would be happy to accept pull requests to improve and change workflows, but
    please open an Issue explaining what and why you want to change something
