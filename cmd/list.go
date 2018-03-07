@@ -44,9 +44,10 @@ var (
 
 // listCmd represents the list command
 var listCmd = &cobra.Command{
-	Use:   "list",
-	Short: "list all snippets",
-	Long:  `Lists all snippets, by default it only prints the uid and title`,
+	Use:     "list",
+	Short:   "list all snippets",
+	Long:    `Lists all snippets, by default it only prints the uid and title`,
+	PreRunE: ensureConfig,
 	Run: func(cmd *cobra.Command, args []string) {
 
 		dataStore := getDataStore()

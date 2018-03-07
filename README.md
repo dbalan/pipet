@@ -25,6 +25,7 @@ Pipet looks for config file `.pipet.yaml` in the home directory.
 ### Sample config
 ```yaml
 document_dir: "<directory-where-files-are-stored>" # default is ~/snippets
+editor_binary: "absolute path to editor you want to use" # default is $EDITOR environment variable
 ```
 
 ## Usage

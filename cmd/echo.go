@@ -37,8 +37,9 @@ import (
 
 // echoCmd represents the echo command
 var echoCmd = &cobra.Command{
-	Use:   "echo uid",
-	Short: "echo snippet data to stdout",
+	Use:     "echo uid",
+	Short:   "echo snippet data to stdout",
+	PreRunE: ensureConfig,
 	Run: func(cmd *cobra.Command, args []string) {
 		dataStore := getDataStore()
 		snip, err := dataStore.Read(args[0])

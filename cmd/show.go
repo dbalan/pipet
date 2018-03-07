@@ -43,6 +43,7 @@ var showCmd = &cobra.Command{
 	Use:   "show uid",
 	Short: "display the snippet",
 	Args:  cobra.ExactArgs(1),
+	PreRunE: ensureConfig,
 	Run: func(cmd *cobra.Command, args []string) {
 		dataStore := getDataStore()
 		snip, err := dataStore.Read(args[0])

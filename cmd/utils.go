@@ -36,6 +36,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"github.com/spf13/cobra"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
@@ -80,6 +81,17 @@ func isValidDirectory(p string) bool {
 	return true
 }
 
+func ensureConfig(cmd *cobra.Command, args []string) error {
+	if _, ok := viper.Get("document_dir").(string); !ok {
+		return errors.New("no document_dir set in config, run pipet init")
+	}
+
+	if _, ok := viper.Get("editor_binary").(string); !ok {
+		return errors.New("no editor_binary set in conifg, run pipet init")
+	}
+	return nil
+}
+
 func getDataStore() *pipetdata.DataStore {
 	diskPath := viper.Get("document_dir").(string)
 	dataStore, err := pipetdata.NewDataStore(expandHome(diskPath))
@@ -89,11 +101,7 @@ func getDataStore() *pipetdata.DataStore {
 
 // call external editor to edit the snippet.
 func editSnippet(fn string) error {
-	editorBin := os.Getenv("EDITOR")
-	if editorBin == "" {
-		return errors.New("please populate default EDITOR value by setting $EDITOR")
-	}
-
+	editorBin := viper.Get("editor_binary").(string)
 	cmd := exec.Command(editorBin, fn)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout

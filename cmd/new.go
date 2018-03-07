@@ -41,7 +41,8 @@ var (
 // newCmd represents the new command
 var newCmd = &cobra.Command{
 	Use:   "new",
-	Short: `Creates a new snippet and opens $EDITOR to edit content`,
+	Short: `Creates a new snippet and opens editor to edit content`,
+	PreRunE: ensureConfig,
 	Run: func(cmd *cobra.Command, args []string) {
 		title := cmd.Flag("title").Value.String()
 

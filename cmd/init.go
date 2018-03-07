@@ -55,39 +55,76 @@ var initCmd = &cobra.Command{
 			errorGuard(fmt.Errorf("e"), "files exists: delete ~/.pipet.yaml if you want to reconfig")
 		}
 
-		reader := bufio.NewReader(os.Stdin)
-		fmt.Printf("Where do you want to store snippets? (directory): ")
-		text, err := reader.ReadString('\n')
-		errorGuard(err, "reading failed")
+		fmt.Printf("Where do you want to store snippets? (directory|default: ~/snippets): ")
+		snipDir := readLine()
 
-		text = strings.TrimSuffix(text, "\n")
-		if !isValidDirectory(text) {
+		if !isValidDirectory(snipDir) {
 			errorGuard(fmt.Errorf("invalid path"), "error")
 		}
 
-		buf, err := yaml.Marshal(&struct {
-			DocDir string `yaml:"document_dir"`
-		}{text})
+		// try getting $EDITOR!
+		defEdit := "(no defaults)"
+		editor := os.Getenv("EDITOR")
+		if editor != "" {
+			defEdit = fmt.Sprintf("(defaults to %s)", editor)
+		}
 
-		errorGuard(err, "failed marshalling data")
+		fmt.Printf("path to editor to use with pippet %s:", defEdit)
+		eBin := readLine()
+
+		config := &struct {
+			DocDir string `yaml:"document_dir,omitempty"`
+			EBin   string `yaml:"editor_binary,omitempty"`
+		}{}
+
+		if eBin == "" && defEdit == "" {
+			errorGuard(fmt.Errorf("empy input"), "no editor specified")
+		}
+
+		if eBin == "" {
+			eBin = editor
+		}
+
+		if eBin != "" {
+			path, err := which(eBin)
+			errorGuard(err, "No such editor found!")
+
+			// expanded path
+			if path != eBin {
+				fmt.Printf("Using %s as the absoulte path to editor\n", green(path))
+			}
+			config.EBin = path
+		} else {
+			errorGuard(fmt.Errorf("empty input"), "no editor sepcified")
+		}
+
+		if snipDir != "" {
+			config.DocDir = snipDir
+		} else {
+			config.DocDir = expandHome("~/snippets")
+		}
+
+		buf, err := yaml.Marshal(config)
+
+		if err != nil {
+			errorGuard(err, "failed marshalling data")
+		}
 		errorGuard(ioutil.WriteFile(configFile, buf, 0755), "writing file failed")
 		fmt.Printf(`pipet is now ready to use
  snippets are stored in: %s
  config is stored in %s
-`, green(text), green(configFile))
+`, green(snipDir), green(configFile))
 	},
+}
+
+func readLine() string {
+	reader := bufio.NewReader(os.Stdin)
+	text, err := reader.ReadString('\n')
+	errorGuard(err, "reading failed")
+
+	return strings.TrimSuffix(text, "\n")
 }
 
 func init() {
 	rootCmd.AddCommand(initCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// initCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// initCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

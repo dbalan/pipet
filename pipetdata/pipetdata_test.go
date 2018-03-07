@@ -82,8 +82,7 @@ func TestDataStoreList(t *testing.T) {
 	assert.Nil(t, err, "data store creation")
 
 	snli, err := ds.List()
-	assert.Nil(t, err, "should not error on empty ds")
-	assert.Len(t, snli, 0, "empty ds")
+	assert.NotNil(t, err, "Should have errored")
 
 	fn, err := ds.New("Kernel version", "linux", "kernel", "systems", "code")
 	assert.Nil(t, err, "new snippet must be created")

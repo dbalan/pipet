@@ -88,16 +88,13 @@ func initConfig() {
 
 	}
 
-	viper.SetDefault("document_dir", "~/snippets")
-
-	viper.AutomaticEnv() // read in environment variables that match
+	// ASSUME no defaults for now. Different platforms have different
+	// features, unless tests are setup we will stick with this
+	_, err := which("fzf")
+	errorGuard(err, "fzf is not in path, make sure its installed")
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
 		// fmt.Fprintf(os.Stderr, "Using config file: %s", viper.ConfigFileUsed())
 	}
-
-	// try gussing fzf command
-	_, err := which("fzf")
-	errorGuard(err, "fzf was not found in path")
 }
