@@ -40,11 +40,18 @@ var (
 
 // newCmd represents the new command
 var newCmd = &cobra.Command{
-	Use:   "new",
-	Short: `Creates a new snippet and opens editor to edit content`,
+	Use:     "new",
+	Short:   `Creates a new snippet and opens editor to edit content`,
 	PreRunE: ensureConfig,
 	Run: func(cmd *cobra.Command, args []string) {
 		title := cmd.Flag("title").Value.String()
+
+		if title == "untitled" {
+			fmt.Printf("Title for new snippet: ")
+			if t := readLine(); t != "" {
+				title = t
+			}
+		}
 
 		dataStore := getDataStore()
 

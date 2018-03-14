@@ -32,16 +32,17 @@ package cmd
 import (
 	"bytes"
 	"fmt"
+	"github.com/spf13/cobra"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
-	"github.com/spf13/cobra"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 
+	"bufio"
 	"github.com/dbalan/pipet/pipetdata"
 	"github.com/fatih/color"
 )
@@ -174,4 +175,12 @@ func fuzzyWrapper(searchText string) (sid string, e error) {
 		return
 	}
 	return parseOutput(w.String())
+}
+
+func readLine() string {
+	reader := bufio.NewReader(os.Stdin)
+	text, err := reader.ReadString('\n')
+	errorGuard(err, "reading failed")
+
+	return strings.TrimSuffix(text, "\n")
 }

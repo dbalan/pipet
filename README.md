@@ -5,6 +5,10 @@
 Pipet is a set of commands to store and retrieve snippets of text. Depends on
 [fzf](https://github.com/junegunn/fzf) for search.
 
+## Versioning
+This project is still nascent phase and does not follow a consistent versioning
+scheme yet. Consider all releases alpha.
+
 ## Installation
 There are multiple ways to get pipet.
 1. As a go package (provided you have a working go setup)
