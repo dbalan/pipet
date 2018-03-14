@@ -182,5 +182,9 @@ func (d *DataStore) List() (sns []*Snippet, err error) {
 			sns = append(sns, s)
 		}
 	}
+
+	if len(sns) == 0 {
+		err = errors.New("empty snippet store")
+	}
 	return
 }
