@@ -32,13 +32,11 @@ package cmd
 import (
 	"fmt"
 
-	"bufio"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
-	"strings"
 )
 
 // initCmd represents the init command
@@ -115,14 +113,6 @@ var initCmd = &cobra.Command{
  config is stored in %s
 `, green(snipDir), green(configFile))
 	},
-}
-
-func readLine() string {
-	reader := bufio.NewReader(os.Stdin)
-	text, err := reader.ReadString('\n')
-	errorGuard(err, "reading failed")
-
-	return strings.TrimSuffix(text, "\n")
 }
 
 func init() {
