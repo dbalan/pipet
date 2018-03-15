@@ -24,9 +24,10 @@ see: https://github.com/dbalan/pipet/releases
 
 
 ## Configuration
-Pipet looks for config file `.pipet.yaml` in the home directory.
+Pipet looks for config file `.pipet.yaml` in the home directory. `pipet init` command can generate a new config.
 
 ### Sample config
+
 ```yaml
 document_dir: "<directory-where-files-are-stored>" # default is ~/snippets
 editor_binary: "absolute path to editor you want to use" # default is $EDITOR environment variable
@@ -34,15 +35,28 @@ editor_binary: "absolute path to editor you want to use" # default is $EDITOR en
 
 ## Usage
 
-[![asciicast](https://asciinema.org/a/W6tv7bN9z76EAlZJZDS025JwU.png)](https://asciinema.org/a/W6tv7bN9z76EAlZJZDS025JwU)
+[![asciicast](https://asciinema.org/a/MR8G05JXEIVY1AvKDrfKNjIEy.png)](https://asciinema.org/a/MR8G05JXEIVY1AvKDrfKNjIEy)
 
-  - pipet new : create a new snippets
-  - pipet search : search through current snippets (only titles and tags for now)
-  - pipet edit id : edit a snippet by id
-  - pipet show id : show a snippet
-  - pipet list : list all snippets
-  - pipet init: inital config.
-  - pipet delete: delete snippets.
+```
+Usage:
+  pipet [command]
+
+Available Commands:
+  delete      Remove snippet from storage (this is irreversible!)
+  edit        edit snippet data
+  help        Help about any command
+  init        Configure pipet
+  list        list all snippets
+  new         Creates a new snippet and opens editor to edit content
+  search      Search through snippets
+  show        display the snippet
+
+Flags:
+      --config string   config file (default is $HOME/.pipet.yaml)
+  -h, --help            help for pipet
+  -t, --toggle          Help message for toggle
+
+```
 
 ## TODO
   - [x] finish configure command
@@ -50,10 +64,10 @@ editor_binary: "absolute path to editor you want to use" # default is $EDITOR en
   - [x] circleci build
   - [x] binary downloads
   - [x] make public
-  - [ ] Search full text, with a flag to search command
-  - [ ] Try to abstract snippet id from operations.
+  - [ ] Ability to search full text, with a flag to search command
+  - [ ] Try to abstract snippet id from operations, one way to do this is to move id's optional for commands and jump to a search interface in case IDs are not specified.
   - [ ] Tests, would like more tests.
-  - [ ] Add an archive flag for search, the data is not deleted, but is not exposed unless user turns on another flag.
+  - [ ] Add an archive flag for delete, the data is not deleted, but is not exposed unless user turns on another flag.
 
 ## Hacking
 0. Uses [dep](https://golang.github.io/dep/) for dependency management.
