@@ -48,9 +48,8 @@ import (
 )
 
 func errorGuard(err error, msg string) {
-	red := color.New(color.FgRed).SprintFunc()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s: %v\n", red(msg), err)
+		fmt.Fprintf(os.Stderr, "%s: %v\n", Red(msg), err)
 		os.Exit(-1)
 	}
 }

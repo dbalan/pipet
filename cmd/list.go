@@ -31,11 +31,10 @@ package cmd
 
 import (
 	"fmt"
+	"strings"
 
-	"github.com/fatih/color"
 	"github.com/ryanuber/columnize"
 	"github.com/spf13/cobra"
-	"strings"
 )
 
 var (
@@ -55,14 +54,11 @@ var listCmd = &cobra.Command{
 		sns, err := dataStore.List()
 		errorGuard(err, "listing store failed")
 
-		blue := color.New(color.FgBlue).SprintFunc()
-		green := color.New(color.FgGreen).SprintFunc()
-
 		output := []string{"UID | Title | Tags"}
 		for _, snip := range sns {
 			tags := strings.Join(snip.Meta.Tags, " ")
-			out := fmt.Sprintf("%s | %s | %s", green(snip.Meta.UID),
-				snip.Meta.Title, blue(tags))
+			out := fmt.Sprintf("%s | %s | %s", Green(snip.Meta.UID),
+				snip.Meta.Title, Blue(tags))
 			output = append(output, out)
 		}
 

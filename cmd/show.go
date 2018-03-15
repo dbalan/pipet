@@ -32,10 +32,9 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/dbalan/pipet/pipetdata"
-
-	"github.com/fatih/color"
 	"github.com/spf13/cobra"
+
+	"github.com/dbalan/pipet/pipetdata"
 )
 
 var body bool
@@ -64,13 +63,11 @@ func init() {
 }
 
 func fancySnippet(s *pipetdata.Snippet) string {
-	green := color.New(color.FgGreen).SprintFunc()
-	blue := color.New(color.FgBlue).SprintFunc()
-	sep := green("---\n")
+	sep := Green("---\n")
 
-	text := sep + green("Title: ") + fmt.Sprint(s.Meta.Title) + green("\nTags:\n")
+	text := sep + Green("Title: ") + fmt.Sprint(s.Meta.Title) + Green("\nTags:\n")
 	for _, t := range s.Meta.Tags {
-		text += green("- ") + blue(t) + "\n"
+		text += Green("- ") + Blue(t) + "\n"
 	}
 	text += sep
 	text += s.Data

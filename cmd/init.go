@@ -31,12 +31,11 @@ package cmd
 
 import (
 	"fmt"
-
-	"github.com/fatih/color"
-	"github.com/spf13/cobra"
-	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
+
+	"github.com/spf13/cobra"
+	"gopkg.in/yaml.v2"
 )
 
 // initCmd represents the init command
@@ -45,8 +44,6 @@ var initCmd = &cobra.Command{
 	Short: "Configure pipet",
 	Long:  `Creates the config files for pipet if not present, usually you only need at the first use`,
 	Run: func(cmd *cobra.Command, args []string) {
-		green := color.New(color.FgGreen).SprintFunc()
-
 		configFile := expandHome("~/.pipet.yaml")
 		_, err := os.Stat(configFile)
 		if err == nil {
@@ -89,7 +86,7 @@ var initCmd = &cobra.Command{
 
 			// expanded path
 			if path != eBin {
-				fmt.Printf("Using %s as the absoulte path to editor\n", green(path))
+				fmt.Printf("Using %s as the absoulte path to editor\n", Green(path))
 			}
 			config.EBin = path
 		} else {
@@ -111,7 +108,7 @@ var initCmd = &cobra.Command{
 		fmt.Printf(`pipet is now ready to use
  snippets are stored in: %s
  config is stored in %s
-`, green(snipDir), green(configFile))
+`, Green(snipDir), Green(configFile))
 	},
 }
 
