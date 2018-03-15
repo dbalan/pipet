@@ -72,6 +72,18 @@ func TestDataStore(t *testing.T) {
 	}
 
 	assert.Equal(t, expected.Meta, sn.Meta, "snippet metadata should match")
+
+	// test delete
+	err = ds.Delete(uid)
+	assert.Nil(t, err, "should have deleted properly")
+
+	// try random file
+	err = ds.Delete("probably.txt")
+	assert.NotNil(t, err, "should return no file")
+
+	_, err = ds.Read(uid)
+	assert.NotNil(t, err, "no such snippet should exist.")
+
 }
 
 func TestDataStoreList(t *testing.T) {
