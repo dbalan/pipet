@@ -33,43 +33,30 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-
-	"github.com/dbalan/pipet/pipetdata"
 )
 
-var body bool
-
-// showCmd represents the show command
-var showCmd = &cobra.Command{
-	Use:     "show uid",
-	Short:   "display the snippet",
+// deleteCmd represents the delete command
+var deleteCmd = &cobra.Command{
+	Use:     "delete uid",
+	Short:   "Remove snippet from storage (this is irreversible!)",
 	Args:    cobra.ExactArgs(1),
 	PreRunE: ensureConfig,
 	Run: func(cmd *cobra.Command, args []string) {
 		dataStore := getDataStore()
 		snip, err := dataStore.Read(args[0])
-		errorGuard(err, "reading snippet failed")
-		if body {
-			fmt.Printf(snip.Data)
-		} else {
-			fmt.Printf(fancySnippet(snip))
+		errorGuard(err, "querying snippet failed")
+
+		fmt.Printf("Are your you want to %s '%s' [y/n]: ", Red("DELETE"), Green(snip.Meta.Title))
+		confirm := readLine()
+		if confirm == "y" || confirm == "yes" {
+			errorGuard(dataStore.Delete(args[0]), "program failed to delete")
+			fmt.Println("deleted!")
 		}
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(showCmd)
-	showCmd.PersistentFlags().BoolVarP(&body, "body-only", "b", false, "show only snippet content")
-}
+	rootCmd.AddCommand(deleteCmd)
 
-func fancySnippet(s *pipetdata.Snippet) string {
-	sep := Green("---\n")
-
-	text := sep + Green("Title: ") + fmt.Sprint(s.Meta.Title) + Green("\nTags:\n")
-	for _, t := range s.Meta.Tags {
-		text += Green("- ") + Blue(t) + "\n"
-	}
-	text += sep
-	text += s.Data
-	return text
+	// FIXME: add an archive
 }

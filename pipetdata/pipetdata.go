@@ -188,3 +188,18 @@ func (d *DataStore) List() (sns []*Snippet, err error) {
 	}
 	return
 }
+
+func (d *DataStore) Delete(id string) error {
+	if !d.Exist(id) {
+		return errors.New("no such document")
+	}
+
+	filename := d.Fullpath(id)
+
+	err := os.Remove(filename)
+	if err != nil {
+		return errors.Wrap(err, "delete failed")
+	}
+
+	return nil
+}

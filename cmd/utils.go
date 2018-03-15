@@ -30,27 +30,26 @@
 package cmd
 
 import (
+	"bufio"
 	"bytes"
 	"fmt"
-	"github.com/spf13/cobra"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
 
+	"github.com/fatih/color"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
+	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"bufio"
 	"github.com/dbalan/pipet/pipetdata"
-	"github.com/fatih/color"
 )
 
 func errorGuard(err error, msg string) {
-	red := color.New(color.FgRed).SprintFunc()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s: %v\n", red(msg), err)
+		fmt.Fprintf(os.Stderr, "%s: %v\n", Red(msg), err)
 		os.Exit(-1)
 	}
 }
@@ -184,3 +183,8 @@ func readLine() string {
 
 	return strings.TrimSuffix(text, "\n")
 }
+
+// console colors
+var Red = color.New(color.FgRed).SprintFunc()
+var Green = color.New(color.FgGreen).SprintFunc()
+var Blue = color.New(color.FgBlue).SprintFunc()
