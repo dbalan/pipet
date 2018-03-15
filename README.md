@@ -40,9 +40,9 @@ editor_binary: "absolute path to editor you want to use" # default is $EDITOR en
   - pipet search : search through current snippets (only titles and tags for now)
   - pipet edit id : edit a snippet by id
   - pipet show id : show a snippet
-  - pipet echo id : like show, but only prints the snippet data.
   - pipet list : list all snippets
-  - pipet configure: TBD
+  - pipet init: inital config.
+  - pipet delete: delete snippets.
 
 ## TODO
   - [x] finish configure command
@@ -53,6 +53,7 @@ editor_binary: "absolute path to editor you want to use" # default is $EDITOR en
   - [ ] Search full text, with a flag to search command
   - [ ] Try to abstract snippet id from operations.
   - [ ] Tests, would like more tests.
+  - [ ] Add an archive flag for search, the data is not deleted, but is not exposed unless user turns on another flag.
 
 ## Hacking
 0. Uses [dep](https://golang.github.io/dep/) for dependency management.

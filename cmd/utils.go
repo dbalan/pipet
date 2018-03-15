@@ -30,21 +30,21 @@
 package cmd
 
 import (
+	"bufio"
 	"bytes"
 	"fmt"
-	"github.com/spf13/cobra"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
 
+	"github.com/fatih/color"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
+	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"bufio"
 	"github.com/dbalan/pipet/pipetdata"
-	"github.com/fatih/color"
 )
 
 func errorGuard(err error, msg string) {
@@ -184,3 +184,8 @@ func readLine() string {
 
 	return strings.TrimSuffix(text, "\n")
 }
+
+// console colors
+var Red = color.New(color.FgRed).SprintFunc()
+var Green = color.New(color.FgGreen).SprintFunc()
+var Blue = color.New(color.FgBlue).SprintFunc()
