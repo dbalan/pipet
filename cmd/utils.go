@@ -41,6 +41,7 @@ import (
 	"github.com/fatih/color"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
+	"github.com/ryanuber/columnize"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
@@ -182,6 +183,31 @@ func readLine() string {
 	errorGuard(err, "reading failed")
 
 	return strings.TrimSuffix(text, "\n")
+}
+
+func searchFullSnippet() (sid string, e error) {
+	dataStore := getDataStore()
+
+	sns, err := dataStore.List()
+	if err != nil {
+		e = errors.Wrap(err, "listing dataStore failed")
+		return
+	}
+
+	output := []string{}
+	for _, snip := range sns {
+		tags := strings.Join(snip.Meta.Tags, ",")
+		out := fmt.Sprintf("%s | %s | %s", snip.Meta.UID, snip.Meta.Title, tags)
+		output = append(output, out)
+	}
+
+	rendered := columnize.SimpleFormat(output)
+	sid, err = fuzzyWrapper(rendered)
+	if err != nil {
+		e = errors.Wrap(err, "searching failed")
+		return
+	}
+	return sid, err
 }
 
 // console colors

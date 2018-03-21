@@ -32,33 +32,18 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/ryanuber/columnize"
 	"github.com/spf13/cobra"
-	"strings"
 )
 
 // searchCmd represents the search command
 var searchCmd = &cobra.Command{
-	Use:   "search",
-	Short: "Search through snippets",
+	Use:     "search",
+	Short:   "Search through snippets",
 	PreRunE: ensureConfig,
 	Run: func(cmd *cobra.Command, args []string) {
+		sid, err := searchFullSnippet()
+
 		dataStore := getDataStore()
-
-		sns, err := dataStore.List()
-		errorGuard(err, "listing dataStore failed")
-
-		output := []string{}
-		for _, snip := range sns {
-			tags := strings.Join(snip.Meta.Tags, ",")
-			out := fmt.Sprintf("%s | %s | %s", snip.Meta.UID, snip.Meta.Title, tags)
-			output = append(output, out)
-		}
-
-		rendered := columnize.SimpleFormat(output)
-		sid, err := fuzzyWrapper(rendered)
-		errorGuard(err, "searching failed")
-
 		snip, err := dataStore.Read(sid)
 		errorGuard(err, "reading snippet failed")
 		fmt.Printf(fancySnippet(snip))
