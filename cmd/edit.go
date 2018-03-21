@@ -35,12 +35,21 @@ import (
 
 // editCmd represents the edit command
 var editCmd = &cobra.Command{
-	Use:   "edit",
+	Use:   "edit [uid]",
 	Short: "edit snippet data",
-	Args:  cobra.ExactArgs(1),
+	Args:  cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
+		sid := ""
+		if len(args) == 0 {
+			s, err := searchFullSnippet()
+			errorGuard(err, "")
+			sid = s
+		} else {
+			sid = args[0]
+		}
+
 		dataStore := getDataStore()
-		fn := dataStore.Fullpath(args[0])
+		fn := dataStore.Fullpath(sid)
 		editSnippet(fn)
 	},
 }

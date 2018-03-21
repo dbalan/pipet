@@ -41,13 +41,22 @@ var body bool
 
 // showCmd represents the show command
 var showCmd = &cobra.Command{
-	Use:     "show uid",
+	Use:     "show [uid]",
 	Short:   "display the snippet",
-	Args:    cobra.ExactArgs(1),
+	Args:    cobra.MaximumNArgs(1),
 	PreRunE: ensureConfig,
 	Run: func(cmd *cobra.Command, args []string) {
+		sid := ""
+		if len(args) == 0 {
+			s, err := searchFullSnippet()
+			errorGuard(err, "")
+			sid = s
+		} else {
+			sid = args[0]
+		}
+
 		dataStore := getDataStore()
-		snip, err := dataStore.Read(args[0])
+		snip, err := dataStore.Read(sid)
 		errorGuard(err, "reading snippet failed")
 		if body {
 			fmt.Printf(snip.Data)

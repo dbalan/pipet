@@ -42,14 +42,13 @@ Usage:
   pipet [command]
 
 Available Commands:
-  delete      Remove snippet from storage (this is irreversible!)
-  edit        edit snippet data
-  help        Help about any command
   init        Configure pipet
-  list        list all snippets
   new         Creates a new snippet and opens editor to edit content
-  search      Search through snippets
-  show        display the snippet
+  show        Show snippet
+  delete      Remove snippet from storage (this is irreversible!)
+  edit        Edit snippet data
+  help        Help about any command
+  list        List all snippets
 
 Flags:
       --config string   config file (default is $HOME/.pipet.yaml)
@@ -65,7 +64,7 @@ Flags:
   - [x] binary downloads
   - [x] make public
   - [ ] Ability to search full text, with a flag to search command
-  - [ ] Try to abstract snippet id from operations, one way to do this is to move id's optional for commands and jump to a search interface in case IDs are not specified.
+  - [x] Try to abstract snippet id from operations, one way to do this is to move id's optional for commands and jump to a search interface in case IDs are not specified.
   - [ ] Tests, would like more tests.
   - [ ] Add an archive flag for delete, the data is not deleted, but is not exposed unless user turns on another flag.
 

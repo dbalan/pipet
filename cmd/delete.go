@@ -37,19 +37,28 @@ import (
 
 // deleteCmd represents the delete command
 var deleteCmd = &cobra.Command{
-	Use:     "delete uid",
+	Use:     "delete [uid]",
 	Short:   "Remove snippet from storage (this is irreversible!)",
-	Args:    cobra.ExactArgs(1),
+	Args:    cobra.MaximumNArgs(1),
 	PreRunE: ensureConfig,
 	Run: func(cmd *cobra.Command, args []string) {
+		sid := ""
+		if len(args) == 0 {
+			s, err := searchFullSnippet()
+			errorGuard(err, "")
+			sid = s
+		} else {
+			sid = args[0]
+		}
+
 		dataStore := getDataStore()
-		snip, err := dataStore.Read(args[0])
+		snip, err := dataStore.Read(sid)
 		errorGuard(err, "querying snippet failed")
 
 		fmt.Printf("Are your you want to %s '%s' [y/n]: ", Red("DELETE"), Green(snip.Meta.Title))
 		confirm := readLine()
 		if confirm == "y" || confirm == "yes" {
-			errorGuard(dataStore.Delete(args[0]), "program failed to delete")
+			errorGuard(dataStore.Delete(sid), "program failed to delete")
 			fmt.Println("deleted!")
 		}
 	},

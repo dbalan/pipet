@@ -31,9 +31,7 @@ package cmd
 
 import (
 	"fmt"
-	"strings"
 
-	"github.com/ryanuber/columnize"
 	"github.com/spf13/cobra"
 )
 
@@ -54,22 +52,11 @@ var listCmd = &cobra.Command{
 		sns, err := dataStore.List()
 		errorGuard(err, "listing store failed")
 
-		output := []string{"UID | Title | Tags"}
-		for _, snip := range sns {
-			tags := strings.Join(snip.Meta.Tags, " ")
-			out := fmt.Sprintf("%s | %s | %s", Green(snip.Meta.UID),
-				snip.Meta.Title, Blue(tags))
-			output = append(output, out)
-		}
-
-		rendered := columnize.SimpleFormat(output)
+		rendered := renderSnippetList(sns, true)
 		fmt.Println(rendered)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(listCmd)
-
-	//	listCmd.Flags().BoolVarP(&tags, "tags", "t", false, "Enable list tags associated with the snippet.")
-	//	listCmd.Flags().BoolVarP(&full, "full", "f", false, "Print the full snippet")
 }
