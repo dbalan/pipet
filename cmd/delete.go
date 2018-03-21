@@ -37,7 +37,7 @@ import (
 
 // deleteCmd represents the delete command
 var deleteCmd = &cobra.Command{
-	Use:     "delete uid",
+	Use:     "delete [uid]",
 	Short:   "Remove snippet from storage (this is irreversible!)",
 	Args:    cobra.MaximumNArgs(1),
 	PreRunE: ensureConfig,
