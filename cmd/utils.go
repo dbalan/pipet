@@ -122,10 +122,18 @@ func editSnippet(fn string) error {
 func parseOutput(out string) (string, error) {
 	out = strings.TrimSuffix(out, "\n")
 	oli := strings.Split(out, " ")
-	if len(oli) < 2 {
+
+	coli := []string{}
+	// compact the output
+	for _, v := range oli {
+		if v != "" {
+			coli = append(coli, v)
+		}
+	}
+	if len(coli) < 2 {
 		return "", errors.New("bad data")
 	}
-	return oli[0], nil
+	return coli[len(coli)-1], nil
 }
 
 func which(c string) (string, error) {
@@ -185,6 +193,26 @@ func readLine() string {
 	return strings.TrimSuffix(text, "\n")
 }
 
+func renderSnippetList(sns []*pipetdata.Snippet, header bool) string {
+	output := []string{}
+	if header {
+		output = append(output, "Title | Tags | UID")
+	}
+
+	for _, snip := range sns {
+		tags := strings.Join(snip.Meta.Tags, ",")
+		if header {
+			snip.Meta.Title = Green(snip.Meta.Title)
+			tags = Blue(tags)
+		}
+		out := fmt.Sprintf("%s | %s | %s", snip.Meta.Title,
+			tags, snip.Meta.UID)
+		output = append(output, out)
+	}
+
+	return columnize.SimpleFormat(output)
+}
+
 func searchFullSnippet() (sid string, e error) {
 	dataStore := getDataStore()
 
@@ -194,14 +222,7 @@ func searchFullSnippet() (sid string, e error) {
 		return
 	}
 
-	output := []string{}
-	for _, snip := range sns {
-		tags := strings.Join(snip.Meta.Tags, ",")
-		out := fmt.Sprintf("%s | %s | %s", snip.Meta.UID, snip.Meta.Title, tags)
-		output = append(output, out)
-	}
-
-	rendered := columnize.SimpleFormat(output)
+	rendered := renderSnippetList(sns, false)
 	sid, err = fuzzyWrapper(rendered)
 	if err != nil {
 		e = errors.Wrap(err, "searching failed")
