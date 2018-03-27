@@ -30,7 +30,7 @@ editor_binary: "absolute path to editor you want to use" # default is $EDITOR en
 
 ## Usage
 
-[![asciicast](https://asciinema.org/a/MR8G05JXEIVY1AvKDrfKNjIEy.png)](https://asciinema.org/a/MR8G05JXEIVY1AvKDrfKNjIEy)
+[![asciicast](https://asciinema.org/a/pDumZGUeirlDHdzieWtNB5riL.png)](https://asciinema.org/a/pDumZGUeirlDHdzieWtNB5riL)
 
 ```
 Store and sprinkle code snippets
