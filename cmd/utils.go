@@ -48,6 +48,11 @@ import (
 	"github.com/dbalan/pipet/pipetdata"
 )
 
+// console colors
+var Red = color.New(color.FgRed).SprintFunc()
+var Green = color.New(color.FgGreen).SprintFunc()
+var Blue = color.New(color.FgBlue).SprintFunc()
+
 func errorGuard(err error, msg string) {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s: %v\n", Red(msg), err)
@@ -230,8 +235,3 @@ func searchFullSnippet() (sid string, e error) {
 	}
 	return sid, err
 }
-
-// console colors
-var Red = color.New(color.FgRed).SprintFunc()
-var Green = color.New(color.FgGreen).SprintFunc()
-var Blue = color.New(color.FgBlue).SprintFunc()

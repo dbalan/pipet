@@ -5,10 +5,6 @@
 Pipet is a set of commands to store and retrieve snippets of text. Depends on
 [fzf](https://github.com/junegunn/fzf) for search.
 
-## Versioning
-This project is still nascent phase and does not follow a consistent versioning
-scheme yet. Consider all releases alpha.
-
 ## Installation
 There are multiple ways to get pipet.
 1. As a go package (provided you have a working go setup)
@@ -20,8 +16,7 @@ go install # installs to $GOPATH/bin
 ```
 
 2. As a binary release
-see: https://github.com/dbalan/pipet/releases
-
+see: https://github.com/dbalan/pipet/releases. On *nix you need to set executable permission (`chmod +x pipet`)
 
 ## Configuration
 Pipet looks for config file `.pipet.yaml` in the home directory. `pipet init` command can generate a new config.
@@ -35,53 +30,40 @@ editor_binary: "absolute path to editor you want to use" # default is $EDITOR en
 
 ## Usage
 
-[![asciicast](https://asciinema.org/a/MR8G05JXEIVY1AvKDrfKNjIEy.png)](https://asciinema.org/a/MR8G05JXEIVY1AvKDrfKNjIEy)
+[![asciicast](https://asciinema.org/a/pDumZGUeirlDHdzieWtNB5riL.png)](https://asciinema.org/a/pDumZGUeirlDHdzieWtNB5riL)
 
 ```
+Store and sprinkle code snippets
+
 Usage:
   pipet [command]
 
 Available Commands:
-  init        Configure pipet
-  new         Creates a new snippet and opens editor to edit content
-  show        Show snippet
   delete      Remove snippet from storage (this is irreversible!)
-  edit        Edit snippet data
+  edit        edit snippet data
   help        Help about any command
-  list        List all snippets
+  init        Configure pipet
+  list        list all snippets
+  new         Creates a new snippet and opens editor to edit content
+  show        display the snippet
 
 Flags:
       --config string   config file (default is $HOME/.pipet.yaml)
   -h, --help            help for pipet
   -t, --toggle          Help message for toggle
 
+Use "pipet [command] --help" for more information about a command.
 ```
 
 ## TODO
-  - [x] finish configure command
-  - [x] hacking docs
-  - [x] circleci build
-  - [x] binary downloads
-  - [x] make public
-  - [ ] Ability to search full text, with a flag to search command
-  - [x] Try to abstract snippet id from operations, one way to do this is to move id's optional for commands and jump to a search interface in case IDs are not specified.
   - [ ] Tests, would like more tests.
-  - [ ] Add an archive flag for delete, the data is not deleted, but is not exposed unless user turns on another flag.
+  - [ ] Add an archive flag in place of delete (?)
 
 ## Hacking
-0. Uses [dep](https://golang.github.io/dep/) for dependency management.
-```bash
-# Clone repo
-WORKDIR=$GOPATH/src/github.com/dbalan/pipet
-git clone git@github.com:dbalan/pipet $OWORKDIR
-cd $WORKDIR
-dep ensure  # dep needes to be installed ofcourse
-go build
-```
-1. Pipet is mostly written to suit my workflow, which means it is quite limited.
-   I would be happy to accept pull requests to improve and change workflows, but
-   please open an Issue explaining what and why you want to change something
-   before opening a PR.
+See CONTRIBUTING.md
+
+## Versioning
+Follows [semantic versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Thanks
 Pipet takes a heavy inspiration from [pet](https://github.com/knqyf263/pet) and other projects.
