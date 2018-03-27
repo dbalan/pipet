@@ -6,8 +6,7 @@ Pipet is a set of commands to store and retrieve snippets of text. Depends on
 [fzf](https://github.com/junegunn/fzf) for search.
 
 ## Versioning
-This project is still nascent phase and does not follow a consistent versioning
-scheme yet. Consider all releases alpha.
+Follows [semantic versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Installation
 There are multiple ways to get pipet.
@@ -20,8 +19,7 @@ go install # installs to $GOPATH/bin
 ```
 
 2. As a binary release
-see: https://github.com/dbalan/pipet/releases
-
+see: https://github.com/dbalan/pipet/releases. On *nix you need to set executable permission (`chmod +x pipet`)
 
 ## Configuration
 Pipet looks for config file `.pipet.yaml` in the home directory. `pipet init` command can generate a new config.
