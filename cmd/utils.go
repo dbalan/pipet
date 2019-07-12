@@ -108,7 +108,12 @@ func getDataStore() *pipetdata.DataStore {
 // call external editor to edit the snippet.
 func editSnippet(fn string) error {
 	editorBin := viper.Get("editor_binary").(string)
-	cmd := exec.Command(editorBin, fn)
+
+	// editor_binary is of form bin args
+	parsed := strings.Split(editorBin, " ")
+	args := parsed[1:]
+	args = append(args, fn)
+	cmd := exec.Command(parsed[0], args...)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

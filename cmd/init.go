@@ -33,6 +33,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
@@ -81,14 +82,21 @@ var initCmd = &cobra.Command{
 		}
 
 		if eBin != "" {
-			path, err := which(eBin)
+			// eBin might be editor + args
+			// for e.g emacsclient -t
+			actualBinPath := strings.Split(eBin, " ")[0]
+			path, err := which(actualBinPath)
 			errorGuard(err, "No such editor found!")
 
 			// expanded path
 			if path != eBin {
 				fmt.Printf("Using %s as the absoulte path to editor\n", Green(path))
 			}
-			config.EBin = path
+			if actualBinPath != eBin {
+				config.EBin = path + " " + strings.Join(strings.Split(eBin, " ")[1:], " ")
+			} else {
+				config.EBin = path
+			}
 		} else {
 			errorGuard(fmt.Errorf("empty input"), "no editor sepcified")
 		}
